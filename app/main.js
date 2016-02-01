@@ -1,3 +1,5 @@
+var xScale, xAxis;
+
 (function() {
   'use strict';
 
@@ -28,7 +30,7 @@
     .domain([0, d3.max(data, function(d) { return d.value})])
     .range([0, height]);
 
-  var xScale = d3.scale.linear()
+  xScale = d3.scale.linear()
     .domain([0, d3.max(data, function(d) { return d.time})])
     .range([0, width]);
 
@@ -36,7 +38,7 @@
   barWidth = width / (xDomain[1] - xDomain[0]);
 
 
-  var xAxis = d3.svg.axis()
+  xAxis = d3.svg.axis()
     .scale(xScale);
 
   var bar = chart.selectAll("g")
@@ -56,7 +58,7 @@
     .attr("dy", ".35em")
     .text(function(d) { return d.value; });
 
-  var xAxis = chart.append("g")
+  var xAxisLine = chart.append("g")
     .attr({
       "class":   "x axis",
       transform: "translate(0," + (height - 20) + ")"
@@ -111,3 +113,13 @@
   }
 
 })();
+
+function rescale() {
+  xScale.domain([0, 20]);
+  d3.select(".x.axis")
+    .transition().duration(1500).ease("sin-in-out")
+  // https://github.com/mbostock/d3/wiki/Transitions#wiki-d3_ease
+    .call(xAxis);
+}
+
+// zoom and rescale http://bl.ocks.org/stepheneb/1182434
