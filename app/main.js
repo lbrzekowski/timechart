@@ -44,7 +44,6 @@ var xScale, xAxis;
 
   var zoom = d3.behavior.zoom()
     .x(xScale)
-    //.y(y)
     .scaleExtent([1, 1])
     .on("zoom", zoomed)
     .on('zoomstart', function() {
@@ -57,9 +56,7 @@ var xScale, xAxis;
   chart.call(zoom);
 
   function zoomed(d) {
-    //console.log('zoomedd', xScale.domain());
     chart.select(".x.axis").call(xAxis);
-    //svg.select(".y.axis").call(yAxis);
   }
 
   var bar = chart.selectAll("g")
@@ -115,21 +112,6 @@ var xScale, xAxis;
     chart.selectAll('text')
       .attr('x', barWidth / 2);
 
-    //chart.selectAll('rect.percent')
-    //  .attr('width', function(d) { return x(d.percent); });
-    //
-    //// update median ticks
-    //var median = d3.median(chart.selectAll('.bar').data(),
-    //  function(d) { return d.percent; });
-    //
-    //chart.selectAll('line.median')
-    //  .attr('x1', x(median))
-    //  .attr('x2', x(median));
-    //
-    //
-    //// update axes
-    //chart.select('.x.axis.top').call(xAxis.orient('top'));
-    //chart.select('.x.axis.bottom').call(xAxis.orient('bottom'));
     d3.select(window).on('resize', resize);
   }
 
@@ -139,8 +121,5 @@ function rescale() {
   xScale.domain([0, 20]);
   d3.select(".x.axis")
     .transition().duration(1500).ease("sin-in-out")
-  // https://github.com/mbostock/d3/wiki/Transitions#wiki-d3_ease
     .call(xAxis);
 }
-
-// zoom and rescale http://bl.ocks.org/stepheneb/1182434
