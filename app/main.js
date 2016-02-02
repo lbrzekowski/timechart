@@ -41,6 +41,27 @@ var xScale, xAxis;
   xAxis = d3.svg.axis()
     .scale(xScale);
 
+
+  var zoom = d3.behavior.zoom()
+    .x(xScale)
+    //.y(y)
+    .scaleExtent([1, 1])
+    .on("zoom", zoomed)
+    .on('zoomstart', function() {
+      console.log('zoomstart', xScale.domain());
+    })
+    .on('zoomend', function() {
+      console.log('zoomend', xScale.domain());
+    });
+
+  chart.call(zoom);
+
+  function zoomed(d) {
+    //console.log('zoomedd', xScale.domain());
+    chart.select(".x.axis").call(xAxis);
+    //svg.select(".y.axis").call(yAxis);
+  }
+
   var bar = chart.selectAll("g")
     .data(data)
     .enter().append("g")
