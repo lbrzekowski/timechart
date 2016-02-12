@@ -30,8 +30,8 @@ nv.models.timeMultiChart = function() {
     lines1 = nv.models.line().yScale(yScale1),
     lines2 = nv.models.line().yScale(yScale2),
 
-    bars1 = nv.models.multiBar().stacked(false).yScale(yScale1),
-    bars2 = nv.models.multiBar().stacked(false).yScale(yScale2),
+    bars1 = nv.models.timeMultiBar().stacked(false).yScale(yScale1),
+    bars2 = nv.models.timeMultiBar().stacked(false).yScale(yScale2),
 
     stack1 = nv.models.stackedArea().yScale(yScale1),
     stack2 = nv.models.stackedArea().yScale(yScale2),
