@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>timechart</title>
+  <link href="app/timechart.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="bower_components/bootstrap/dist/css/bootstrap.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body ng-app='timeChartApp'>
+<div class="row" ng-controller="MainApp as vm">
+  <div class="col-md-2">
+    <button class="btn btn-primary btn-sm">rescale</button>
+  </div>
+  <div id="main" class="col-md-8 main">
+    <nvd3 options="vm.options" data="vm.data"></nvd3>
+  </div>
+  <div class="col-md-2"></div>
+</div>
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/d3/d3.js"></script>
+<script src="bower_components/nvd3/build/nv.d3.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+<script src="app/nvd3-timeMultiChart.js"></script>
+<script src="app/angular-main.js"></script>
+</body>
+</html>
