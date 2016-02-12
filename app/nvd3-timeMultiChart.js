@@ -86,7 +86,12 @@ nv.models.timeMultiChart = function() {
         });
 
       x.domain(d3.extent(d3.merge(series1.concat(series2)), function(d) { return d.x } ));
-      x.range([0, availableWidth]);
+      //x.range([0, availableWidth]);
+      x.range([availableWidth * .5 / data[0].values.length,
+        availableWidth * (data[0].values.length - .5)  / data[0].values.length ]);
+      console.log(availableWidth * .5 / data[0].values.length,
+        availableWidth * (data[0].values.length - .5)  / data[0].values.length);
+      console.log(0, availableWidth);
 
       var wrap = container.selectAll('g.wrap.multiChart').data([data]);
       var gEnter = wrap.enter().append('g').attr('class', 'wrap nvd3 multiChart').append('g');
@@ -230,11 +235,11 @@ nv.models.timeMultiChart = function() {
 
       g.select('.nv-y1.nv-axis')
         .classed('nv-disabled', series1.length ? false : true)
-        .attr('transform', 'translate(' + x.range()[0] + ',0)');
+        .attr('transform', 'translate(0,0)');
 
       g.select('.nv-y2.nv-axis')
         .classed('nv-disabled', series2.length ? false : true)
-        .attr('transform', 'translate(' + x.range()[1] + ',0)');
+        .attr('transform', 'translate(' + availableWidth + ',0)');
 
       legend.dispatch.on('stateChange', function(newState) {
         chart.update();
