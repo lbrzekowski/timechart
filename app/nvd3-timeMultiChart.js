@@ -23,7 +23,7 @@ nv.models.timeMultiChart = function() {
   // Private Variables
   //------------------------------------------------------------
 
-  var x = d3.scale.linear(),
+  var x = d3.time.scale(), //d3.scale.linear(),
     yScale1 = d3.scale.linear(),
     yScale2 = d3.scale.linear(),
 
