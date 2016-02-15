@@ -6,9 +6,15 @@ nv.models.coverBars = function() {
     , margin = {top: 0, right: 0, bottom: 0, left: 0}
     , width = 960
     , height = 500
+    , duration = 500
+    , dispatch = d3.dispatch('chartClick', 'elementClick', 'elementDblClick', 'elementMouseover', 'elementMouseout', 'elementMousemove', 'renderEnd')
   ;
 
+  var renderWatch = nv.utils.renderWatch(dispatch, duration)
+    ;
+
   function chart(selection) {
+    renderWatch.reset();
     selection.each(function(data) {
       container = d3.select(this);
       var availableWidth = nv.utils.availableWidth(width, container, margin),
@@ -54,9 +60,40 @@ nv.models.coverBars = function() {
           return 'translate(' + (w * i) + ',0)'; })  //(x(getX(d)) - bars1.xScale().rangeBand()/2)
         ;
 
+      coverBars
+        .attr('transform', function(d,i) {
+          var w = availableWidth / 8;
+          return 'translate(' + (w * i) + ',0)';
+        })
+      ;
+
+      var barSelection =
+        coverBars.watchTransition(renderWatch, 'covers', Math.min(250, duration))
+          .delay(function(d,i) {
+            return i * duration / data[0].values.length;
+          });
+
+      barSelection
+        //.attr('x', function(d,i) {
+        //  return d.series * x.rangeBand() / data.length;
+        //})
+        .attr('width',availableWidth / data[0].values.length)
+        //.attr('y', function(d,i) {
+        //  return getY(d,i) < 0 ?
+        //    y(0) :
+        //    y(0) - y(getY(d,i)) < 1 ?
+        //    y(0) - 1 :
+        //    y(getY(d,i)) || 0;
+        //})
+        .attr('height', availableHeight)
+        //.attr('height', function(d,i) {
+        //  return Math.max(Math.abs(y(getY(d,i)) - y(0)),1) || 0;
+        //})
+      ;
 
 
     });
+    renderWatch.renderEnd('covers immediate');
     return chart;
   }
 

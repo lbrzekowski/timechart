@@ -215,7 +215,9 @@ nv.models.timeMultiBar = function() {
         .style('fill-opacity', 0.75);
 
       var bars = groups.selectAll('rect.nv-bar')
-        .data(function(d) { return (hideable && !data.length) ? hideable.values : d.values });
+        .data(function(d) {
+          return (hideable && !data.length) ? hideable.values : d.values
+        });
       bars.exit().remove();
 
       var barsEnter = bars.enter().append('rect')
@@ -225,8 +227,12 @@ nv.models.timeMultiBar = function() {
         })
         .attr('y', function(d,i,j) { return y0(stacked && !data[j].nonStackable ? d.y0 : 0) || 0 })
         .attr('height', 0)
-        .attr('width', function(d,i,j) { return x.rangeBand() / (stacked && !data[j].nonStackable ? 1 : data.length) })
-        .attr('transform', function(d,i) { return 'translate(' + x(getX(d,i)) + ',0)'; })
+        .attr('width', function(d,i,j) {
+          return x.rangeBand() / (stacked && !data[j].nonStackable ? 1 : data.length)
+        })
+        .attr('transform', function(d,i) {
+          return 'translate(' + x(getX(d,i)) + ',0)';
+        })
         ;
       bars
         .style('fill', function(d,i,j){ return color(d, j, i);  })

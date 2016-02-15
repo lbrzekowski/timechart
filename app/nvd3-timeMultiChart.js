@@ -183,8 +183,6 @@ nv.models.timeMultiChart = function() {
         .datum(dataStack2.filter(function(d){return !d.disabled}));
       var coverBarsWrap = g.select('.cover-bars')
         .datum(data);
-      var coverBarsWrapEmpty = g.select('.cover-bars')
-        .datum([{values: []}]);
 
       var extraValue1 = dataStack1.length ? dataStack1.map(function(a){return a.values}).reduce(function(a,b){
         return a.map(function(aVal,i){return {x: aVal.x, y: aVal.y + b[i].y}})
@@ -216,7 +214,6 @@ nv.models.timeMultiChart = function() {
       if(dataLines1.length){d3.transition(lines1Wrap).call(lines1);}
       if(dataLines2.length){d3.transition(lines2Wrap).call(lines2);}
 
-      d3.transition(coverBarsWrapEmpty).call(coverBars);
       d3.transition(coverBarsWrap).call(coverBars);
 
       xAxis
