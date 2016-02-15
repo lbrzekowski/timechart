@@ -169,6 +169,7 @@ nv.models.timeMultiBar = function() {
       var g = wrap.select('g');
 
       gEnter.append('g').attr('class', 'nv-groups');
+      gEnter.append('g').attr('class', 'nv-cover');
       wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
       defsEnter.append('clipPath')
@@ -354,6 +355,27 @@ nv.models.timeMultiBar = function() {
             return Math.max(Math.abs(y(getY(d,i)) - y(0)),1) || 0;
           });
       }
+
+      //var cover = wrap.select('.nv-cover').selectAll('rect.nv-cover')
+      //  .data(function(d) {
+      //    console.log(d, d[0].values);
+      //    return d[0].values;
+      //  });
+      ////var bars = groups.selectAll('rect.nv-bar')
+      ////  .data(function(d) { return (hideable && !data.length) ? hideable.values : d.values });
+      //cover.exit().remove();
+      //
+      //var barsEnter = cover.enter().append('rect')
+      //  .attr('class', 'nv-cover')
+      //  .attr('x', 0)
+      //  .attr('y', 0)
+      //  .attr('height', 200)
+      //  .attr('width', function(d,i,j) {
+      //    return x.rangeBand();
+      //  })
+      //  .attr('transform', function(d,i) { return 'translate(' + x(getX(d,i)) + ',0)'; })
+      //  ;
+
 
       //store old scales for use in transitions on update
       x0 = x.copy();

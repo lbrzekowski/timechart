@@ -27,8 +27,8 @@ nv.models.timeMultiChart = function() {
     yScale1 = d3.scale.linear(),
     yScale2 = d3.scale.linear(),
 
-    lines1 = nv.models.line().yScale(yScale1),
-    lines2 = nv.models.line().yScale(yScale2),
+    lines1 = nv.models.timeLine().yScale(yScale1),
+    lines2 = nv.models.timeLine().yScale(yScale2),
 
     bars1 = nv.models.timeMultiBar().stacked(false).yScale(yScale1),
     bars2 = nv.models.timeMultiBar().stacked(false).yScale(yScale2),
@@ -39,6 +39,8 @@ nv.models.timeMultiChart = function() {
     xAxis = nv.models.axis().scale(x).orient('bottom').tickPadding(5),
     yAxis1 = nv.models.axis().scale(yScale1).orient('left'),
     yAxis2 = nv.models.axis().scale(yScale2).orient('right'),
+
+    coverBars = nv.models.coverBars(),
 
     legend = nv.models.legend().height(30),
     tooltip = nv.models.tooltip(),
@@ -89,9 +91,6 @@ nv.models.timeMultiChart = function() {
       //x.range([0, availableWidth]);
       x.range([availableWidth * .5 / data[0].values.length,
         availableWidth * (data[0].values.length - .5)  / data[0].values.length ]);
-      console.log(availableWidth * .5 / data[0].values.length,
-        availableWidth * (data[0].values.length - .5)  / data[0].values.length);
-      console.log(0, availableWidth);
 
       var wrap = container.selectAll('g.wrap.multiChart').data([data]);
       var gEnter = wrap.enter().append('g').attr('class', 'wrap nvd3 multiChart').append('g');
@@ -105,6 +104,7 @@ nv.models.timeMultiChart = function() {
       gEnter.append('g').attr('class', 'bars2Wrap');
       gEnter.append('g').attr('class', 'stack1Wrap');
       gEnter.append('g').attr('class', 'stack2Wrap');
+      gEnter.append('g').attr('class', 'cover-bars');
       gEnter.append('g').attr('class', 'legendWrap');
 
       var g = wrap.select('g');
@@ -163,6 +163,9 @@ nv.models.timeMultiChart = function() {
         .width(availableWidth)
         .height(availableHeight)
         .color(color_array.filter(function(d,i) { return !data[i].disabled && data[i].yAxis == 2 && data[i].type == 'area'}));
+      coverBars
+        .width(availableWidth)
+        .height(availableHeight);
 
       g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -178,6 +181,10 @@ nv.models.timeMultiChart = function() {
         .datum(dataBars2.filter(function(d){return !d.disabled}));
       var stack2Wrap = g.select('.stack2Wrap')
         .datum(dataStack2.filter(function(d){return !d.disabled}));
+      var coverBarsWrap = g.select('.cover-bars')
+        .datum(data);
+      var coverBarsWrapEmpty = g.select('.cover-bars')
+        .datum([{values: []}]);
 
       var extraValue1 = dataStack1.length ? dataStack1.map(function(a){return a.values}).reduce(function(a,b){
         return a.map(function(aVal,i){return {x: aVal.x, y: aVal.y + b[i].y}})
@@ -208,6 +215,9 @@ nv.models.timeMultiChart = function() {
 
       if(dataLines1.length){d3.transition(lines1Wrap).call(lines1);}
       if(dataLines2.length){d3.transition(lines2Wrap).call(lines2);}
+
+      d3.transition(coverBarsWrapEmpty).call(coverBars);
+      d3.transition(coverBarsWrap).call(coverBars);
 
       xAxis
         ._ticks( nv.utils.calcTicksX(availableWidth/100, data) )
@@ -244,6 +254,31 @@ nv.models.timeMultiChart = function() {
       legend.dispatch.on('stateChange', function(newState) {
         chart.update();
       });
+
+      //var coverBars = wrap.select('.cover-bars').selectAll('rect.nv-cover')
+      //  .data(function(d) {
+      //    console.log(d, d[0].values);
+      //    return d[0].values;
+      //  });
+      ////var bars = groups.selectAll('rect.nv-bar')
+      ////  .data(function(d) { return (hideable && !data.length) ? hideable.values : d.values });
+      //coverBars.exit().remove();
+      //
+      //var barsEnter = coverBars.enter().append('rect')
+      //  .attr('class', 'nv-cover')
+      //  .attr('x', 0)
+      //  .attr('y', 0)
+      //  .attr('height', availableHeight)
+      //  .attr('width', function(d,i,j) {
+      //    console.log('rangeBand', bars1.xScale().rangeBand());
+      //    return bars1.xScale().rangeBand();
+      //  })
+      //  .attr('transform', function(d,i) {
+      //    console.log('transform', i, getX(d), x(getX(d)));
+      //    return 'translate(' + (x(getX(d)) - bars1.xScale().rangeBand()/2) + ',0)'; })
+      //  ;
+
+    });
 
       //============================================================
       // Event Handling/Dispatching
@@ -330,8 +365,6 @@ nv.models.timeMultiChart = function() {
       bars2.dispatch.on('elementMousemove.tooltip', function(evt) {
         tooltip.position({top: d3.event.pageY, left: d3.event.pageX})();
       });
-
-    });
 
     return chart;
   }
